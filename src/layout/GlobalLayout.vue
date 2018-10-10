@@ -1,0 +1,141 @@
+<template>
+  <a-layout>
+    <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100vh;">
+      <div class="logo">
+        <img alt="logo" src="@/assets/logo.png">
+        <h1>叮当配</h1>
+      </div>
+      <SidebarMenu></SidebarMenu>
+    </a-layout-sider>
+    <a-layout>
+      <a-layout-header style="background: #fff; padding: 0">
+        <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed" />
+        <div class="header-navbar">
+          <a-badge count="5" class="header-navbar-item-icon" >
+            <a-icon type="bell" />
+          </a-badge>
+          <a-dropdown class="header-navbar-item">
+            <span>
+              <a-avatar class="avatar" size="small" shape="circle" :src="currentUser.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
+              <span>{{currentUser.nickname}}</span>
+            </span>
+            <a-menu style="width: 150px" slot="overlay">
+              <a-menu-item key="1">
+                <a-icon type="user" />
+                <span>个人中心</span>
+              </a-menu-item>
+              <a-menu-item key="2">
+                <a-icon type="setting" />
+                <span>设置</span>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="3">
+                <router-link to="/login">
+                  <a-icon type="poweroff" />
+                  <span>退出登录</span>
+                </router-link>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </div>
+      </a-layout-header>
+      <a-layout-content>
+          <transition name="page-toggle">
+            <router-view ref="page" />
+          </transition>
+      </a-layout-content>
+    </a-layout>
+  </a-layout>
+</template>
+
+<script>
+  import IMenu from './siderMenu'
+  import SidebarMenu from '@/components/sidebar/SidebarMenu.vue'
+  import GlobalHeader from './GlobalHeader'
+  import { mapState } from 'vuex'
+  import axios from "axios";
+export default {
+  props: ['desc', 'logo', 'title', 'avatar'],
+  components: {
+    IMenu,
+    SidebarMenu,
+    GlobalHeader
+  },
+  data () {
+    return {
+      collapsed: false
+    }
+  },
+  methods: {
+
+  },
+  computed: {
+    currentUser () {
+      return {
+        'nickname': '系统管理员',
+        'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+#app {
+  .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+    :hover {color: #1890ff;}
+  }
+  .logo {
+    height: 64px;
+    position: relative;
+    line-height: 64px;
+    padding-left: 24px;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    overflow: hidden;
+    img {
+      width: 32px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    h1 {
+      color: #fff;
+      font-size: 20px;
+      margin: 0 0 0 12px;
+      font-family: "Myriad Pro","Helvetica Neue",Arial,Helvetica,sans-serif;
+      font-weight: 600;
+      display: inline-block;
+      height: 32px;
+      line-height: 32px;
+      vertical-align: middle;
+    }
+  }
+  .page-content {
+    margin: 24px 16px 0;
+  }
+  .header-navbar {
+    float: right; margin: 0 2em;
+    .header-navbar-item-icon{
+      font-size: 20px;
+      margin-top: 4px;
+      padding: 0 1em;
+      display: inline-block;
+      height: 100%;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+    .header-navbar-item {
+      padding: 0 1em;
+      display: inline-block;
+      height: 100%;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+  }
+}
+</style>

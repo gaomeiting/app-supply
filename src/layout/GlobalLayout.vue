@@ -3,13 +3,13 @@
     <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100vh;">
       <div class="logo">
         <img alt="logo" src="@/assets/logo.png">
-        <h1>叮当配</h1>
       </div>
       <SidebarMenu></SidebarMenu>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed" />
+        <span style="color: #000;font-size: 16px">我的工作台</span>
         <div class="header-navbar">
           <a-badge count="5" class="header-navbar-item-icon" >
             <a-icon type="bell" />
@@ -98,8 +98,10 @@ export default {
     -webkit-transition: all .3s;
     transition: all .3s;
     overflow: hidden;
+    background: #ffffff;
+    box-shadow: #f2f2f2 0.5px 0px 1px 1px;
     img {
-      width: 32px;
+      //width: 32px;
       display: inline-block;
       vertical-align: middle;
     }

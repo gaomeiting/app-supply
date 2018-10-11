@@ -18,10 +18,6 @@
 		title="Title"
 		id="modal" :footer="null">
 		<p>Some contents...</p>
-		<p>Some contents...</p>
-		<p>Some contents...</p>
-		<p>Some contents...</p>
-		<p>Some contents...</p>
 		</a-modal>
 		<foot-bar :list="list"></foot-bar>
 	</div>

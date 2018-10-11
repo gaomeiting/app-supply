@@ -6,8 +6,8 @@ import axios from 'axios'
 import message from 'ant-design-vue/lib/message'
 import 'ant-design-vue/dist/antd.css'
 import Antd from 'ant-design-vue'
-import '@/styles/index.scss' // global css
 import 'normalize.css'
+import 'assets/scss/base.scss';
 
 import './mock'  // simulation data
 Vue.use(Antd)

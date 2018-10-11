@@ -2,7 +2,7 @@
     <page-layout :avatar="currentUser.avatar">
         <div slot="headerContent">
             <div class="title">你好，<span>{{currentUser.nickname}}</span></div>
-            <div>测试新消息</div>
+            <div>姓名</div>
         </div>
         <div>
             <a-card title="进行中的项目">

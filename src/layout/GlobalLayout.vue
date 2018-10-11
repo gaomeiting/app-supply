@@ -1,15 +1,18 @@
 <template>
   <a-layout>
-    <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="height: 100vh;">
+    <a-layout-sider :trigger="null"
+                    collapsible
+                    v-model="collapsed"
+                    style="height: 100vh;;position: fixed">
       <div class="logo">
         <img alt="logo" src="@/assets/logo.png">
       </div>
       <SidebarMenu></SidebarMenu>
     </a-layout-sider>
-    <a-layout>
+    <a-layout style="margin-left: 200px;min-width: 1200px;min-height: 100vh;padding-bottom: 20px">
       <a-layout-header style="background: #fff; padding: 0">
         <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed" />
-        <span style="color: #000;font-size: 16px">我的工作台</span>
+        <span style="color: #000;font-size: 16px">{{this.$route.meta.breadcrumbName}}</span>
         <div class="header-navbar">
           <a-badge count="5" class="header-navbar-item-icon" >
             <a-icon type="bell" />

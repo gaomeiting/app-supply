@@ -1,12 +1,9 @@
-export function loginByUsername(username, password) {
-    const usernameToken = {username, password}
-    return null
+import axios from 'axios';
+export class User {
+    constructor () {
+        
+    }
 }
-
-export function logout() {
-    return;
-}
-
-export function getUserToken() {
-    return null;
+export function CreateUser {
+    return new User()
 }

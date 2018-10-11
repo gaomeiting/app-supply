@@ -25,6 +25,8 @@ body, html {
     box-sizing: border-box;
 }
 
-html .login :global(.ant-modal-footer) {
-    display: none;
+html .ant-avatar :global {
+	img {
+		min-height: 100%;
+	}
 }

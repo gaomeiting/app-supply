@@ -122,6 +122,12 @@ export default new Router({
           ]
         },
       ]
+    },
+    {
+      path: "/news",
+      name: "news",
+      meta: {breadcrumbName: '消息中心', icon: 'home'},
+      component: () => import('@/views/news/news.vue')
     }
   ]
 });

@@ -5,7 +5,8 @@
             <div>测试新消息</div>
         </div>
         <div>
-            <a-card title="进行中的项目"></a-card>
+            <a-card title="进行中的项目">
+            </a-card>
         </div>
     </page-layout>
 </template>

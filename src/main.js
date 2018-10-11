@@ -4,6 +4,7 @@ import router from "./router/router"
 import store from "./store"
 import axios from 'axios'
 import message from 'ant-design-vue/lib/message'
+//import 'ant-design-vue/dist/antd.less'
 import 'ant-design-vue/dist/antd.css'
 import Antd from 'ant-design-vue'
 import 'normalize.css'

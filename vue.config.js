@@ -14,5 +14,27 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     proxy: 'http://192.168.100.37:8080'
+  },
+  configureWebpack: {
+    module: {
+      rules: [{
+        test: /\.less$/,
+        use: [{
+          loader: 'style-loader',
+        }, {
+          loader: 'css-loader',
+        }, {
+          loader: 'less-loader',
+          options: {
+            modifyVars: {
+              'primary-color': '#1DA57A',
+              'link-color': '#1DA57A',
+              'border-radius-base': '2px',
+            },
+            javascriptEnabled: true,
+          },
+        }],
+      }],
+    },
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <div>
-      <breadcrumb style="margin-bottom: 16px;" />
+      <!--<breadcrumb style="margin-bottom: 16px;" />-->
       <div class="detail">
         <div v-if="avatar" class="avatar"><a-avatar :src="avatar" /></div>
         <div class="main">

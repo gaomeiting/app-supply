@@ -1,5 +1,11 @@
 @import "variable.scss";
 
+ul, ol, li {
+	list-style: none;
+}
+a, a:hover {
+	text-decoration: none;
+}
 body, html {
 	width:100%;
 	min-width: 1200px;
@@ -17,4 +23,8 @@ body, html {
     min-width: 1200px;
     min-height: 100vh;
     box-sizing: border-box;
+}
+
+html .login :global(.ant-modal-footer) {
+    display: none;
 }

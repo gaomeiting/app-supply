@@ -4,7 +4,7 @@
            <div class="logo">
                <img src="/logo.png" alt="">
            </div>
-            <head-nav :user="currentUser"></head-nav>
+            <head-nav :user="currentUser" title="消息中心"></head-nav>
        </div>
        <div class="content-wrap">
            <div class="side-bar-wrap">
@@ -35,8 +35,10 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="pagination-wrap">
+                        <a-pagination size="small" :total="100" :current="current" :defaultPageSize="6" showQuickJumper :showTotal="total => `总共 ${total} 条`" @change="onChange" />
+                    </div>
                 </div>
-                
             </div>
        </div>
        
@@ -55,7 +57,13 @@ export default {
             currentUser: {
                 'nickname': '系统管理员',
                 'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
-            }
+            },
+            current: 1
+        }
+    },
+    methods: {
+        onChange(current) {
+            this.current = current
         }
     },
     components: {
@@ -66,6 +74,12 @@ export default {
 </script>
 <style scoped lang="scss">
 @import "~assets/scss/variable";
+.pagination-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 30px 0 50px;
+
+}
 .content-wrap {
     display: flex;
     .side-bar-wrap {

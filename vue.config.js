@@ -8,7 +8,7 @@ module.exports = {
       .set('assets', resolve('src/assets'))
 			.set('components', resolve('src/components'))
 			.set('views', resolve('src/views'))
-			.set('api', resolve('src/api'))
+			.set('api', resolve('src/apis'))
       .set('_conf', resolve('config'))
   },
   productionSourceMap: false,

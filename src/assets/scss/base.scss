@@ -1,11 +1,13 @@
-@import "variable.scss";
+@import "./variable.scss";
+@import "./icon.scss";
 
 ul, ol, li {
 	list-style: none;
 }
-a, a:hover {
+a, a:hover, a:link, a:active, a:visited {
 	text-decoration: none;
 }
+
 body, html {
 	width:100%;
 	min-width: 1200px;

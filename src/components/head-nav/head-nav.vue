@@ -1,8 +1,8 @@
 <template>
 	    <a-layout>
             <a-layout-header style="background: #fff; padding: 0">
-                <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed" />
-                <span style="color: #000;font-size: 16px">我的工作台</span>
+                <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" v-if="title" @click="()=> collapsed = !collapsed" />
+                <span style="color: #000;font-size: 16px" v-if="title">{{title}}</span>
                 <div class="header-navbar">
                 <a-badge count="5" class="header-navbar-item-icon" >
                     <a-icon type="bell" />
@@ -56,6 +56,10 @@ export default {
                     'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
                 }
             }
+        },
+        title: {
+            type: String,
+            default: ''
         }
     }
 }

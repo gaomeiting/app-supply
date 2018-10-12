@@ -3,12 +3,11 @@
 <div class="confirm" v-show="flag" @click.stop="hide">
 	<div class="confirm-wrapper">
 		<div class="confirm-content">
-			
 			<slot></slot>
 			<p class="text">请使用微信扫描二维码登录</p>
-			<!-- <div class="operate">
-				<div class="operate-btn" @click.stop="confirm">{{confirmBtnText}}</div>
-			</div> -->
+			<div class="operate-btn">
+					<i class="iconfont icon-shanchu"></i>
+			</div>
 		</div>
 	</div>
 </div>
@@ -90,20 +89,12 @@ methods: {
 				font-size: $font-size-medium;
 				color: $color-text-l;
 			}
-			.operate {
-				display: flex;
-				align-items: center;
-				text-align: center;
-				font-size: $font-size-medium-x;
-				.operate-btn {
-					flex: 1;
-					line-height: 22px;
-					padding: 10px 0;
-					border-top: 1px solid $color-background;
-					color: $color-text-d;
-					&.left {
-						border-right: 1px solid $color-background;
-					}
+			.operate-btn {
+				position: absolute;
+				top: 12px;
+				right: 12px;
+				.iconfont {
+					font-size: $font-size-large;
 				}
 			}
 		}

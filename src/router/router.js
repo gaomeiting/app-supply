@@ -11,7 +11,20 @@ export default new Router({
     {
       path: "/login",
       name: "login",
+      meta: {breadcrumbName: '登录', icon: 'login'},
       component: () => import("@/views/login/login")
+    },
+    {
+      path: "/ongoing",
+      name: "ongoing",
+      meta: {breadcrumbName: '审核中', icon: 'ongoing'},
+      component: () => import("@/views/ongoing/ongoing")
+    },
+    {
+      path: "/code",
+      name: "code",
+      meta: {breadcrumbName: '公众号', icon: 'code'},
+      component: () => import("@/views/code/code")
     },
     {
       path: "/",
@@ -126,7 +139,7 @@ export default new Router({
     {
       path: "/news",
       name: "news",
-      meta: {breadcrumbName: '消息中心', icon: 'home'},
+      meta: {breadcrumbName: '消息中心', icon: 'news'},
       component: () => import('@/views/news/news.vue')
     }
   ]

@@ -26,6 +26,7 @@
 import HeadBar from 'components/head-bar/head-bar';
 import FootBar from 'components/footbar/footbar';
 import AlertBox from 'components/alert/alert';
+import axios from 'api/http';
 export default {
 	data() {
 		return {
@@ -46,6 +47,7 @@ export default {
 		}
 	},
 	created() {
+		this.getPlayer()
 		this.$nextTick(() => {
 			let obj = new WxLogin ({
 				id:"login_container",
@@ -64,7 +66,7 @@ export default {
 			this.$refs.alertBox.show()
 		},
 		getPlayer() {
-			getData(`/api/activity/107/detail`).then(res=>{
+			axios(`/api/activity/107/detail`).then(res=>{
 				
 			}).catch(err => {
 				this._handlerError(err)

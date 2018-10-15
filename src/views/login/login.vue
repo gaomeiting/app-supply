@@ -25,8 +25,8 @@
 <script type="text/ecmascript-6">
 import HeadBar from 'components/head-bar/head-bar';
 import FootBar from 'components/footbar/footbar';
+import { handlerError } from 'api/catch';
 import AlertBox from 'components/alert/alert';
-import axios from 'api/http';
 export default {
 	data() {
 		return {
@@ -47,14 +47,14 @@ export default {
 		}
 	},
 	created() {
-		this.getPlayer()
+		let state = this.$route.query.redirect;
 		this.$nextTick(() => {
 			let obj = new WxLogin ({
 				id:"login_container",
 				appid: "wxd1a46e0a37db25b3",
 				scope: "snsapi_login",
 				redirect_uri: encodeURI("http://wxt.ddpei.cn/api/user/wechat/auth") ,
-				state: "",
+				state,
 				style: "black",      
 				href: "/code.css"
 			});
@@ -65,13 +65,7 @@ export default {
 		showAlertBox() {
 			this.$refs.alertBox.show()
 		},
-		getPlayer() {
-			axios(`/api/activity/107/detail`).then(res=>{
-				
-			}).catch(err => {
-				this._handlerError(err)
-			})
-		}
+		
 	},
 	components: {
 		FootBar,

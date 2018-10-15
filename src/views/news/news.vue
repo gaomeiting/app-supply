@@ -17,7 +17,7 @@
                     </div>
                     <div class="list-content">
                         <ul>
-                            <li v-for="(item, index) in 6" :key="index">
+                            <li v-for="(item, index) in list" :key="index">
                                 <figure>
                                     <img src="/header.png" >
                                 </figure>
@@ -25,18 +25,21 @@
                                     <h3>叮当配官方</h3>
                                     <p class="time">
                                         <time>
-                                            2018-09-01 16：30
+                                           {{ item.creatTime }}
                                         </time>
                                     </p>
                                     <p class="info">
-                                        管理员给您开放了 订单《XXXXXXXXXXXXXX》 的权限，您可以查看文稿和上传音频了
+                                        {{ item.content }}
                                     </p>
                                 </div>
                             </li>
                         </ul>
                     </div>
-                    <div class="pagination-wrap">
-                        <a-pagination size="small" :total="100" :current="current" :defaultPageSize="6" showQuickJumper :showTotal="total => `总共 ${total} 条`" @change="onChange" />
+                    <div class="pagination-wrap" v-if="list.length>0">
+                        <a-pagination size="small" :total="total" :current="current" :defaultPageSize="6" showQuickJumper :showTotal="total => `总共 ${total} 条`" @change="onChange" />
+                    </div>
+                    <div class="no-result-wrap" v-if="list.length == 0 && !loading">
+                        <no-result title="空空如也~~"></no-result>
                     </div>
                 </div>
             </div>
@@ -49,31 +52,59 @@
 <script>
 import SideBar from 'components/sidebar/SidebarMenu';
 import HeadNav from 'components/head-nav/head-nav';
+import NoResult from 'components/no-result/no-result';
+import { handlerError } from 'api/catch';
 
 export default {
     data() {
         return {
-            
             currentUser: {
                 'nickname': '系统管理员',
                 'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
             },
-            current: 1
+            current: 1,
+            list: [],
+            size: 5,
+            total: 0,
+            loading: true
         }
+    },
+    created() {
+        this._getNews()
     },
     methods: {
         onChange(current) {
             this.current = current
+            this._getNews()
+        },
+        _getNews() {
+            let page = this.current - 1;
+            this.loading = true;
+            this.$axios(`/api/notification?page=${page}&size=${this.size}`).then(res => {
+                this.loading = false
+                if(res.data.status == 200) {
+                    if(!this.total) this.total = res.data.total;
+                    this.list = res.data.data;
+                    console.log(this.list)
+                }
+            }).catch(err => {
+                this.loading = false;
+                handlerError(err.data)
+            })
         }
     },
     components: {
         SideBar,
-        HeadNav
+        HeadNav,
+        NoResult
     }
 }
 </script>
 <style scoped lang="scss">
 @import "~assets/scss/variable";
+.no-result-wrap {
+    padding: 60px 0;
+}
 .pagination-wrap {
     display: flex;
     justify-content: center;

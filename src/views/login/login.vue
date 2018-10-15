@@ -16,17 +16,17 @@
 		<alert-box ref="alertBox">
 			<div id="login_container"></div>
 		</alert-box>
-		
-		
+
+
 		<foot-bar :list="list"></foot-bar>
 	</div>
-	
+
 </template>
 <script type="text/ecmascript-6">
 import HeadBar from 'components/head-bar/head-bar';
 import FootBar from 'components/footbar/footbar';
 import AlertBox from 'components/alert/alert';
-import axios from 'api/http';
+//import axios from 'api/http';
 export default {
 	data() {
 		return {
@@ -47,7 +47,6 @@ export default {
 		}
 	},
 	created() {
-		this.getPlayer()
 		this.$nextTick(() => {
 			let obj = new WxLogin ({
 				id:"login_container",
@@ -55,11 +54,11 @@ export default {
 				scope: "snsapi_login",
 				redirect_uri: encodeURI("http://wxt.ddpei.cn/api/user/wechat/auth") ,
 				state: "",
-				style: "black",      
+				style: "black",
 				href: "/code.css"
 			});
 		})
-		
+
 	},
 	methods: {
 		showAlertBox() {
@@ -67,7 +66,7 @@ export default {
 		},
 		getPlayer() {
 			axios(`/api/activity/107/detail`).then(res=>{
-				
+
 			}).catch(err => {
 				this._handlerError(err)
 			})
@@ -89,7 +88,7 @@ export default {
 }
 .page {
 	padding-bottom: 180px;
-	
+
 	.head-bar-wrap {
 		padding: 18px 0;
 		box-shadow: 1px 0 4px rgba(0,0,0,0.1);
@@ -127,7 +126,7 @@ export default {
 		border-radius: 4px;
 		font-size: $font-size-medium-x;
 	}
-	
+
 }
 
 </style>

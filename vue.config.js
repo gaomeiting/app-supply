@@ -13,7 +13,7 @@ module.exports = {
   },
   productionSourceMap: false,
   devServer: {
-    proxy: 'http://192.168.100.37:8080'
+    proxy: 'http://192.168.100.37:8083'
   },
   configureWebpack: {
     module: {

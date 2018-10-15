@@ -52,6 +52,12 @@ export default new Router({
               component: () => import("@/views/order/fast.vue")
             },
             {
+              path: '/order/fastDetail',
+              name: 'order_fast_detail',
+              meta: {breadcrumbName: '快捷订单详情'},
+              component: () => import("@/views/order/fastDetail.vue")
+            },
+            {
               path: '/order/project',
               name: 'order_project',
               meta: {breadcrumbName: '项目订单'},

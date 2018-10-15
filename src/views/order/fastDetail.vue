@@ -2,16 +2,20 @@
   <div class="fast_detail">
     <div class="title">
       <span class="title_title">标题：</span>
-      <span class="title_name">标题名称</span>
+      <span class="title_name">{{orderMessage.title}}</span>
     </div>
     <div class="ask">
       <span class="ask_title">要求：</span>
       <div class="ask_list">
-        <span class="each_ask">标题名称</span>
-        <span class="each_ask">标题名称</span>
-        <span class="each_ask">标题名称</span>
-        <span class="each_ask">标题名称</span>
-        <span class="each_ask">标题名称</span>
+        <span class="each_ask" v-if="orderMessage.requiredGender == 0">不限</span>
+        <span class="each_ask" v-if="orderMessage.requiredGender == 1">男</span>
+        <span class="each_ask" v-if="orderMessage.requiredGender == 0">女</span>
+        <span class="each_ask">{{voiceStyle}}</span>
+        <span class="each_ask" v-if="orderMessage.voiceSpeed == 1">标准</span>
+        <span class="each_ask" v-if="orderMessage.voiceSpeed == 0">慢速</span>
+        <span class="each_ask" v-if="orderMessage.voiceSpeed == 2">快速</span>
+        <span class="each_ask" v-if="orderMessage.requirementTitle == 0">读标题</span>
+        <span class="each_ask" v-if="orderMessage.requirementTitle == 1">不读标题</span>
       </div>
     </div>
     <div class="text">
@@ -20,6 +24,98 @@
       <span class="text_text" v-show="isAllText">{{allText}}<span class="click_all" @click="showShortText">收起 >></span></span>
     </div>
     <p class="demands_title"><span class="color">&nbsp;</span>交付记录</p>
+    <div class="demands_list">
+      <!--<a @click="toDemands(orderMessage.demandId)" style="width: 100%;display: block;text-align: right">查看试音详情</a>-->
+      <a-list itemLayout="horizontal"
+              :dataSource="deliveryList">
+        <a-list-item slot="renderItem" slot-scope="item, index">
+          <div class="list_item">
+            <div class="header">
+              <a-avatar slot="avatar"
+                        class="avatar"
+                        :src="item.avatar"/>
+              <div class="message">
+                <p slot="title" class="mess_title">{{item.title}}</p>
+                <p class="time">{{item.creatTime}}</p>
+              </div>
+            </div>
+            <div class="middle">
+              <p class="text">上传了音频</p>
+              <div class="icons">
+                <div class="icon play" @click="toPlay(index)">
+                  <div class="play_icon">
+                    <a-icon type="play-circle-o" class="icon_icon click_play" style="display: block" />
+                    <a-icon type="pause-circle-o" class="icon_icon click_pause" style="display: none" />
+                  </div>
+                  <span class="icon_text">试听</span>
+                </div>
+                <div class="icon" @click="downLoad(item.voiceUrl)">
+                  <a-icon type="download" class="icon_icon" />
+                  <span class="icon_text">下载</span>
+                </div>
+                <!--满意初始状态-->
+                <div class="icon" @click="toWell(item.status)" v-if="item.status == 0 || item.status == 1">
+                  <a-icon type="like-o" class="icon_icon" />
+                  <a-modal
+                    title="是否确定订单已经完成？"
+                    v-model="visible"
+                    :maskStyle="maskStyle"
+                    @ok="hideModal(item.id)"
+                    okText="确认"
+                    cancelText="取消">
+                    <div>
+                      结算金额：
+                      <a-input-number v-model="settleNum"/>
+                      元
+                    </div>
+                  </a-modal>
+                  <span class="icon_text">满意</span>
+                </div>
+                <!--满意选中状态-->
+                <div class="icon" v-if="item.status == 2">
+                  <a-icon type="like-o" class="icon_icon" style="color: #52c41a;" />
+                  <span class="icon_text" style="color: #52c41a;">满意</span>
+                </div>
+                <!--不满意初始状态-->
+                <div class="icon" v-if="item.status == 0 || item.status == 2" @click="noWell">
+                  <a-icon type="dislike-o" class="icon_icon" />
+                  <a-modal
+                    title="意见反馈"
+                    v-model="visibleNo"
+                    :maskStyle="maskStyle"
+                    @ok="sureOpinion(item.id)"
+                    okText="确认"
+                    cancelText="取消">
+                    <div>
+                      <a-input v-model="opinion" placeholder="请输入对该音频不满意的理由，将会发送给相关配音员"/>
+                    </div>
+                  </a-modal>
+                  <span class="icon_text">不满意</span>
+                </div>
+                <!--不满意选中状态-->
+                <div class="icon" v-if="item.status == 1">
+                  <a-icon type="dislike-o" class="icon_icon" style="color: red;" />
+                  <span class="icon_text" style="color: red;">不满意</span>
+                </div>
+              </div>
+            </div>
+            <div class="content" v-if="item.status != 0">
+              <a-icon type="caret-up" class="up_icon" />
+              <div class="header">
+                <a-avatar slot="avatar"
+                          class="avatar"
+                          src="http://st.ddpei.cn/avatar/BhTrDkWK6TvikB8jZvnRXj.png" />
+                <div class="message">
+                  <p slot="title" class="header_mes_title">叮当配</p>
+                  <p class="time">{{item.replayTime}}</p>
+                </div>
+              </div>
+              <p class="opinion">{{item.replay}}</p>
+            </div>
+          </div>
+        </a-list-item>
+      </a-list>
+    </div>
     <div class="updata">
       <a-upload name="file"
                 :beforeUpload="beforeUpload"
@@ -34,54 +130,95 @@
 </template>
 
 <script>
-    export default {
-      data(){
-        return{
-          isAllText:false,
-          isSuccse:false,
-          text:'',
-          allText:''
+  import axios from 'axios'
+  export default {
+    data(){
+      return{
+        orderMessage:{},
+        deliveryList:[],
+        visible:false,
+        visibleNo:false,
+        settleNum:null,
+        maskStyle:{
+          background:'rgba(0,0,0,0.4)'
+        },
+        opinion:'',
+        isAllText:false,
+        isSuccse:false,
+        text:'',
+        voiceStyle:'',
+        allText:''
+      }
+    },
+    methods:{
+      showAllText(){
+        this.isAllText = true
+      },
+      showShortText(){
+        this.isAllText = false
+      },
+      beforeUpload(file,promise){
+        const upType = file.type === 'audio/mp3'
+        console.log(promise)
+        if(!upType){
+          this.$message.error('请选择性别')
+        }else{
+          this.isSuccse = true
         }
       },
-      methods:{
-        showAllText(){
-          this.isAllText = true
-        },
-        showShortText(){
-          this.isAllText = false
-        },
-        beforeUpload(file,promise){
-          const upType = file.type === 'audio/mp3'
-          console.log(promise)
-          if(!upType){
-            this.$message.error('请选择性别')
-          }else{
-            this.isSuccse = true
-          }
-        },
-        handleChange(file){
-          console.log(file)
-        },
+      handleChange(file){
+        console.log(file)
       },
-      mounted(){
-        console.log(this.text.length)
-        var text = '据6月28日国家发 改委、商 务部联合发布的《外商投资准入特别管理措施（负面清单）（2018年版）》，今年7月28日起，取消专用车、新能源汽车整车制造外资股比限制，2020年取消商用车外资股比限制，2022年取消乘用车外资股比限制以及合资企业不超过两家的限制。据6月28日国家发 改委、商 务部联合发布的《外商投资准入特别管理措施（负面清单）（2018年版）》，今年7月28日起，取消专用车、新能源汽车整车制造外资股比限制，2020年取消商用车外资股比限制，2022年取消乘用车外资股比限制以及合资企业不超过两家的限制。据6月28日国家发 改委、商 务部联合发布的《外商投资准入特别管理措施（负面清单）（2018年版）》，今年7月28日起，取消专用车、新能源汽车整车制造外资股比限制，2020年取消商用车外资股比限制，2022年取消乘用车外资股比限制以及合资企业不超过两家的限制。'
+      hideModal(){},
+      toDemands(){},
+      toPlay(){},
+      downLoad(){},
+      toWell(){},
+      noWell(){},
+
+    },
+
+    mounted(){
+      axios.get('api/order/'+this.$route.params.id+'/detail').then(res => {
+        this.orderMessage = res.data
+        this.voiceStyle = this.orderMessage.voiceStyle.toString()
+        console.log(this.orderMessage)
+        var text = this.orderMessage.content
         this.allText = text
         let textNum = text.length
-        let box = document.getElementById('aa')
-        console.log(this.text.substring(0,10))
         if(textNum >= 100){
           this.text = text.substring(0,150) + '...'
         }else{
           this.text = text
         }
-
-        console.log(this.text)
-      }
+      }).catch(err => {
+        const errorStatus = err.response.status
+        if(errorStatus == '401'){
+          this.$router.replace('/login')
+        }
+        if(errorStatus == '500'){
+          this.error = 1
+        }
+      })
+      axios.get('api/order/'+this.$route.params.id+'/delivery').then(res => {
+        this.deliveryList = res.data
+      }).catch(err => {
+        const errorStatus = err.response.status
+        if(errorStatus == '401'){
+          this.$router.replace('/login')
+        }
+        if(errorStatus == '500'){
+          this.error = 1
+        }
+      })
     }
+  }
 </script>
 
 <style lang="scss" scoped>
+  p{
+    margin-bottom: 0px;
+  }
   .fast_detail{
     background: #ffffff;
     margin: 20px;
@@ -125,7 +262,7 @@
         letter-spacing:1px;
         line-height: 18px;
         .click_all{
-          color: rgba(217, 97, 74, 0.91);
+          color: #4a1d05;
           font-weight: bold;
           text-decoration:underline;
           &:hover{
@@ -140,6 +277,102 @@
       .color{
         background: #ffd101;
         margin-right: 10px;
+      }
+    }
+    .demands_list{
+      .list_item{
+        width: 100%;
+        .header{
+          height: 60px;
+          display: flex;
+          .avatar{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+          }
+          .message{
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-left: 15px;
+            .mess_title{
+              margin-top: 10px;
+            }
+            .time{
+              font-size: 12px;
+              color: #aeaeae;
+              margin-bottom: 8px;
+            }
+          }
+        }
+        .middle{
+          height: 28px;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          padding-left: 65px;
+          .icons{
+            width: 45%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            .play{
+              display: flex;
+              align-items: center;
+            }
+            .icon{
+              .icon_icon{
+                margin-right: 10px;
+              }
+              &:hover{
+                cursor: pointer;
+              }
+            }
+          }
+        }
+        .content{
+          padding: 10px;
+          margin-left: 65px;
+          background: #f2f2f2;
+          position: relative;
+          min-height: 85px;
+          margin-top: 10px;
+          border-radius: 4px;
+          .up_icon{
+            position: absolute;
+            top: -8px;
+            left: 25px;
+            color: #f2f2f2;
+          }
+          .header{
+            height: 50px;
+            display: flex;
+            .avatar{
+              width: 40px;
+              height: 40px;
+            }
+            .message{
+              height: 50px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              margin-left: 15px;
+              .header_mes_title{
+                margin-top: 3px;
+              }
+              .time{
+                font-size: 12px;
+                color: #aeaeae;
+                margin-bottom: 8px;
+              }
+            }
+          }
+          .opinion{
+            margin-left: 55px;
+            margin-top: 5px;
+          }
+        }
       }
     }
   }

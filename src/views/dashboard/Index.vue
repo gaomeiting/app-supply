@@ -2,39 +2,39 @@
   <div class="dashboard">
     <div class="header">
       <div class="header_left">
-        <img src="@/assets/logo-icon.png" class="avatar" alt="姓名">
+        <img :src="dashboardMes.avatar" class="avatar" alt="姓名">
         <div class="header_message">
           <div class="message_people">
-            <h2 class="name">姓名</h2>
-            <img class="level_icon" src="@/assets/level0.png" alt="">
-            <img class="level_icon" src="@/assets/level1.png" alt="">
-            <img class="level_icon" src="@/assets/level2.png" alt="">
+            <h2 class="name">{{dashboardMes.nickname}}</h2>
+            <img v-if="dashboardMes.dubberLevel == 0" class="level_icon" src="@/assets/level0.png" alt="">
+            <img v-if="dashboardMes.dubberLevel == 1" class="level_icon" src="@/assets/level1.png" alt="">
+            <img v-if="dashboardMes.dubberLevel == 2" class="level_icon" src="@/assets/level2.png" alt="">
           </div>
-          <span class="intro">16字简介</span>
+          <span class="intro">{{dashboardMes.slogan}}</span>
         </div>
       </div>
       <div class="header_right">
         <span class="right_text">将要入账：</span>
         <span class="right_icon">￥</span>
-        <span class="right_number">370~400</span>
+        <span class="right_number">{{dashboardMes.incomeFrom}}~{{dashboardMes.incomeTo}}</span>
       </div>
     </div>
     <div class="content">
       <div class="numbers">
         <p class="text">已入账（元）</p>
-        <p class="number">1000</p>
+        <p class="number">{{dashboardMes.income}}</p>
       </div>
       <div class="numbers">
         <p class="text">进行中（订单）</p>
-        <p class="number">2000</p>
+        <p class="number">{{dashboardMes.doingOrder}}</p>
       </div>
       <div class="numbers">
         <p class="text">已试音</p>
-        <p class="number">1000</p>
+        <p class="number">{{dashboardMes.bidCount}}</p>
       </div>
       <div class="numbers">
         <p class="text">已中标</p>
-        <p class="number">1000</p>
+        <p class="number">{{dashboardMes.winBidCount}}</p>
       </div>
     </div>
     <div class="banner">
@@ -48,22 +48,49 @@
 <script>
 import ACard from 'ant-design-vue/lib/card'
 import PageLayout from '@/layout/PageLayout'
+import axios from 'axios'
 
 export default {
-    data(){
-      return{
-        name: "我的工作台",
-      }
-    },
-    components: {ACard, PageLayout},
-    computed: {
-        currentUser () {
-            return {
-                'nickname': '系统管理员',
-                'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
-            }
-        }
+  data(){
+    return{
+      name: "我的工作台",
+      dashboardMes:{},
     }
+  },
+  components: {ACard, PageLayout},
+  computed: {
+      currentUser () {
+          return {
+              'nickname': '系统管理员',
+              'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
+          }
+      }
+  },
+  mounted(){
+    axios.get('api/user/userinfo').then(res => {
+
+    }).catch(err => {
+      const errorStatus = err.response.status
+      if(errorStatus == '401'){
+        //this.$router.replace('/login')
+      }
+      if(errorStatus == '500'){
+        this.error = 1
+      }
+    })
+    axios.get('api/user/workPlatformInfo').then(res => {
+      this.dashboardMes = res.data
+      console.log( this.dashboardMes)
+    }).catch(err => {
+      const errorStatus = err.response.status
+      if(errorStatus == '401'){
+        //this.$router.replace('/login')
+      }
+      if(errorStatus == '500'){
+        this.error = 1
+      }
+    })
+  },
 }
 </script>
 <style lang="scss" scoped>

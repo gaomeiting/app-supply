@@ -1,3 +1,4 @@
+
 <template>
 	<div class="page login">
 		<div class="head-bar-wrap">
@@ -123,5 +124,4 @@ export default {
 	}
 	
 }
-
 </style>

@@ -53,7 +53,7 @@ const routes = [
               component: () => import("@/views/order/fast.vue")
             },
             {
-              path: '/order/fastDetail',
+              path: '/order/fastDetail/:id',
               name: 'order_fast_detail',
               meta: {breadcrumbName: '快捷订单详情', requireAuth: true},
               component: () => import("@/views/order/fastDetail.vue")

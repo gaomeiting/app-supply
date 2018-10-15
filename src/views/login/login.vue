@@ -7,22 +7,17 @@
 			<div class="text">
 				<h2>让每个美好的声音都有价值</h2>
 				<p>成立于2000年 至今服务过上百个国内国际知名品牌！</p>
-				<a href="javascript:;" @click="showModal" class="btn">配音员入驻</a>
+				<a href="javascript:;" class="btn" @click="showAlertBox">配音员入驻</a>
 			</div>
 			<figure>
 				<img src="/singer.jpg" alt="配音员入驻">
 			</figure>
 		</div>
-		<a-modal
-		v-model="visible"
-		title="Title"
-		id="modal" :footer="null">
-		<p>Some contents...</p>
-		<p>Some contents...</p>
-		<p>Some contents...</p>
-		<p>Some contents...</p>
-		<p>Some contents...</p>
-		</a-modal>
+		<alert-box ref="alertBox">
+			<div id="login_container"></div>
+		</alert-box>
+		
+		
 		<foot-bar :list="list"></foot-bar>
 	</div>
 	
@@ -30,6 +25,8 @@
 <script type="text/ecmascript-6">
 import HeadBar from 'components/head-bar/head-bar';
 import FootBar from 'components/footbar/footbar';
+import AlertBox from 'components/alert/alert';
+import axios from 'api/http';
 export default {
 	data() {
 		return {
@@ -46,19 +43,30 @@ export default {
 					image: '/footer_icon_3.png',
 					text: '项目准时借款率100% <br> 你不敢想的，我们真的做到了'
 				}
-			],
-			visible: false
+			]
 		}
 	},
 	created() {
-		//this.getPlayer()
+		this.getPlayer()
+		this.$nextTick(() => {
+			let obj = new WxLogin ({
+				id:"login_container",
+				appid: "wxd1a46e0a37db25b3",
+				scope: "snsapi_login",
+				redirect_uri: encodeURI("http://wxt.ddpei.cn/api/user/wechat/auth") ,
+				state: "",
+				style: "black",      
+				href: "/code.css"
+			});
+		})
+		
 	},
 	methods: {
-		showModal() {
-			this.visible = true
+		showAlertBox() {
+			this.$refs.alertBox.show()
 		},
 		getPlayer() {
-			getData(`/api/activity/107/detail`).then(res=>{
+			axios(`/api/activity/107/detail`).then(res=>{
 				
 			}).catch(err => {
 				this._handlerError(err)
@@ -67,13 +75,18 @@ export default {
 	},
 	components: {
 		FootBar,
-		HeadBar
+		HeadBar,
+		AlertBox
 	}
 }
 </script>
 
 <style scoped lang="scss">
 @import "~assets/scss/variable";
+#login_container {
+	display: flex;
+	justify-content: center;
+}
 .page {
 	padding-bottom: 180px;
 	

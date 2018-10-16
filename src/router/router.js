@@ -152,8 +152,8 @@ const routes = [
 ]
 
 if (window.localStorage.getItem('user')) {
-    
-  store.commit('SET_LOGIN', window.localStorage.getItem('user'))
+    let user = JSON.parse(window.localStorage.getItem('user'))
+  store.commit('SET_LOGIN', user)
 }
 const router= new Router({
 routes : routes

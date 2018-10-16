@@ -4,7 +4,7 @@
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" v-if="title" @click="()=> collapsed = !collapsed" />
                 <span style="color: #000;font-size: 16px" v-if="title">{{title}}</span>
                 <div class="header-navbar">
-                <a-badge count="5" class="header-navbar-item-icon" >
+                <a-badge :count="count" class="header-navbar-item-icon" >
                     <a-icon type="bell" />
                 </a-badge>
                 <a-dropdown class="header-navbar-item">
@@ -56,6 +56,10 @@ export default {
                     'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
                 }
             }
+        },
+        count: {
+            type: Number,
+            default: 0
         },
         title: {
             type: String,

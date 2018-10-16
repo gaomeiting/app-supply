@@ -47,16 +47,16 @@ export default {
 		}
 	},
 	created() {
-		let state = this.$route.query.redirect;
+		let state = this.$route.query.redirect || '/';
 		this.$nextTick(() => {
 			let obj = new WxLogin ({
 				id:"login_container",
-				appid: "wxd1a46e0a37db25b3",
+				appid: "wx488c5ae325198186",
 				scope: "snsapi_login",
-				redirect_uri: encodeURI("http://wxt.ddpei.cn/api/user/wechat/auth") ,
+				redirect_uri: encodeURI("http://mp.ddpei.cn/api/user/wechat/auth") ,
 				state,
 				style: "black",      
-				href: "/code.css"
+				href: "http://mp.ddpei.cn/code.css"
 			});
 		})
 		

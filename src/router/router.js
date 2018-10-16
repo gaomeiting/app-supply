@@ -168,10 +168,10 @@ router.beforeEach((to, from, next) => {
       else {
         axios('/api/user/userinfo').then(res => {
           //window.alert(res.uid)
-          store.commit('SET_LOGIN', res);
+          store.commit('SET_LOGIN', res.data);
           next();
         }).catch(err => {
-          handlerError(err.data)
+          handlerError(err.response.data)
         })
       }
   }

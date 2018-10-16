@@ -93,6 +93,7 @@ methods: {
 				position: absolute;
 				top: 12px;
 				right: 12px;
+				cursor: pointer;
 				.iconfont {
 					font-size: $font-size-large;
 				}

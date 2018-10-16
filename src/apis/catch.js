@@ -1,6 +1,6 @@
 import router from "../router/router"
 import store from "../store"
-
+console.log(router)
 
 export function handlerError(err) {
     if (err) {

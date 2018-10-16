@@ -1,3 +1,4 @@
+
 <template>
 	<div class="page login">
 		<div class="head-bar-wrap">
@@ -16,17 +17,17 @@
 		<alert-box ref="alertBox">
 			<div id="login_container"></div>
 		</alert-box>
-
-
+		
+		
 		<foot-bar :list="list"></foot-bar>
 	</div>
-
+	
 </template>
 <script type="text/ecmascript-6">
 import HeadBar from 'components/head-bar/head-bar';
 import FootBar from 'components/footbar/footbar';
+import { handlerError } from 'api/catch';
 import AlertBox from 'components/alert/alert';
-//import axios from 'api/http';
 export default {
 	data() {
 		return {
@@ -47,30 +48,25 @@ export default {
 		}
 	},
 	created() {
+		let state = this.$route.query.redirect;
 		this.$nextTick(() => {
 			let obj = new WxLogin ({
 				id:"login_container",
 				appid: "wxd1a46e0a37db25b3",
 				scope: "snsapi_login",
 				redirect_uri: encodeURI("http://wxt.ddpei.cn/api/user/wechat/auth") ,
-				state: "",
-				style: "black",
+				state,
+				style: "black",      
 				href: "/code.css"
 			});
 		})
-
+		
 	},
 	methods: {
 		showAlertBox() {
 			this.$refs.alertBox.show()
 		},
-		getPlayer() {
-			axios(`/api/activity/107/detail`).then(res=>{
-
-			}).catch(err => {
-				this._handlerError(err)
-			})
-		}
+		
 	},
 	components: {
 		FootBar,
@@ -88,7 +84,7 @@ export default {
 }
 .page {
 	padding-bottom: 180px;
-
+	
 	.head-bar-wrap {
 		padding: 18px 0;
 		box-shadow: 1px 0 4px rgba(0,0,0,0.1);
@@ -126,7 +122,6 @@ export default {
 		border-radius: 4px;
 		font-size: $font-size-medium-x;
 	}
-
+	
 }
-
 </style>

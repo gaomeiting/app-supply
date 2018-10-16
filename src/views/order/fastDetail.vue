@@ -3,6 +3,11 @@
     <div class="title">
       <span class="title_title">标题：</span>
       <span class="title_name">{{orderMessage.title}}</span>
+      <a @click="downLoad(orderMessage.id)" >123</a>
+      <a :href="'/api/order/export/'+ orderMessage.id" class="dowload">
+        <img src="@/assets/export.png" alt="">
+        导出文稿与要求
+      </a>
     </div>
     <div class="ask">
       <span class="ask_title">要求：</span>
@@ -20,12 +25,15 @@
     </div>
     <div class="text">
       <span class="text_title">文稿：</span>
-      <span class="text_text" v-show="!isAllText">{{text}}<span class="click_all" @click="showAllText">查看全部 >></span></span>
-      <span class="text_text" v-show="isAllText">{{allText}}<span class="click_all" @click="showShortText">收起 >></span></span>
+      <span class="text_text" v-show="!isAllText">{{text}}
+        <span class="click_all" v-if="text.length > 150" @click="showAllText">查看全部 >></span>
+      </span>
+      <span class="text_text" v-show="isAllText">{{allText}}
+        <span class="click_all" v-if="text.length > 150 "@click="showShortText">收起 >></span>
+      </span>
     </div>
     <p class="demands_title"><span class="color">&nbsp;</span>交付记录</p>
-    <div class="demands_list">
-      <!--<a @click="toDemands(orderMessage.demandId)" style="width: 100%;display: block;text-align: right">查看试音详情</a>-->
+    <div class="demands_list" v-if="orderMessage.voiceStatus == 1">
       <a-list itemLayout="horizontal"
               :dataSource="deliveryList">
         <a-list-item slot="renderItem" slot-scope="item, index">
@@ -35,69 +43,14 @@
                         class="avatar"
                         :src="item.avatar"/>
               <div class="message">
-                <p slot="title" class="mess_title">{{item.title}}</p>
+                <p slot="title" class="mess_title">{{item.nickname}}</p>
                 <p class="time">{{item.creatTime}}</p>
               </div>
             </div>
             <div class="middle">
-              <p class="text">上传了音频</p>
-              <div class="icons">
-                <div class="icon play" @click="toPlay(index)">
-                  <div class="play_icon">
-                    <a-icon type="play-circle-o" class="icon_icon click_play" style="display: block" />
-                    <a-icon type="pause-circle-o" class="icon_icon click_pause" style="display: none" />
-                  </div>
-                  <span class="icon_text">试听</span>
-                </div>
-                <div class="icon" @click="downLoad(item.voiceUrl)">
-                  <a-icon type="download" class="icon_icon" />
-                  <span class="icon_text">下载</span>
-                </div>
-                <!--满意初始状态-->
-                <div class="icon" @click="toWell(item.status)" v-if="item.status == 0 || item.status == 1">
-                  <a-icon type="like-o" class="icon_icon" />
-                  <a-modal
-                    title="是否确定订单已经完成？"
-                    v-model="visible"
-                    :maskStyle="maskStyle"
-                    @ok="hideModal(item.id)"
-                    okText="确认"
-                    cancelText="取消">
-                    <div>
-                      结算金额：
-                      <a-input-number v-model="settleNum"/>
-                      元
-                    </div>
-                  </a-modal>
-                  <span class="icon_text">满意</span>
-                </div>
-                <!--满意选中状态-->
-                <div class="icon" v-if="item.status == 2">
-                  <a-icon type="like-o" class="icon_icon" style="color: #52c41a;" />
-                  <span class="icon_text" style="color: #52c41a;">满意</span>
-                </div>
-                <!--不满意初始状态-->
-                <div class="icon" v-if="item.status == 0 || item.status == 2" @click="noWell">
-                  <a-icon type="dislike-o" class="icon_icon" />
-                  <a-modal
-                    title="意见反馈"
-                    v-model="visibleNo"
-                    :maskStyle="maskStyle"
-                    @ok="sureOpinion(item.id)"
-                    okText="确认"
-                    cancelText="取消">
-                    <div>
-                      <a-input v-model="opinion" placeholder="请输入对该音频不满意的理由，将会发送给相关配音员"/>
-                    </div>
-                  </a-modal>
-                  <span class="icon_text">不满意</span>
-                </div>
-                <!--不满意选中状态-->
-                <div class="icon" v-if="item.status == 1">
-                  <a-icon type="dislike-o" class="icon_icon" style="color: red;" />
-                  <span class="icon_text" style="color: red;">不满意</span>
-                </div>
-              </div>
+              <p class="middle_text">上传了音频</p>
+              <img src="@/assets/play.png" class="to_play" style="display: block" @click="toPlay(index)">
+              <img src="@/assets/pause.png" class="to_pause" style="display: none" @click="toPlay(index)">
             </div>
             <div class="content" v-if="item.status != 0">
               <a-icon type="caret-up" class="up_icon" />
@@ -116,32 +69,33 @@
         </a-list-item>
       </a-list>
     </div>
-    <div class="updata">
+    <div class="updata" v-if="orderMessage.voiceStatus == 0">
       <a-upload name="file"
+                class="updata_input"
                 :beforeUpload="beforeUpload"
                 :showUploadList="isSuccse"
                 @change="handleChange"
-                action="//jsonplaceholder.typicode.com/posts/">
-        <p>上传音频</p>
+                :action="'api/order/'+ orderMessage.id +'/upload'">
+        <p class="updata_text">上传音频</p>
       </a-upload>
-
+      <p>(格式限制为mp3格式，大小不超过20M)</p>
     </div>
+    <audio :src=currentUrl ref="storyAudio" @ended="ended"></audio>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
   export default {
+    inject:['reload'],
     data(){
       return{
+        currentUrl:'',
+        currentIndex:0,
         orderMessage:{},
         deliveryList:[],
-        visible:false,
-        visibleNo:false,
-        settleNum:null,
-        maskStyle:{
-          background:'rgba(0,0,0,0.4)'
-        },
+        isPlay:false,
+        isUpdataSize:false,
         opinion:'',
         isAllText:false,
         isSuccse:false,
@@ -151,42 +105,91 @@
       }
     },
     methods:{
+      downLoad(id){
+        //window.location.href='/api/order/export/'+ id
+        axios.get('api/order/export/'+id).then(res => {
+          let blob = new Blob([res.data], {
+            type: `application/msword` //word文档为msword,pdf文档为pdf
+          });
+          console.log(blob)
+          let objectUrl = URL.createObjectURL(blob);
+          console.log(objectUrl)
+          let link = document.createElement("a");
+          let fname = `我的文档`; //下载文件的名字
+          link.href = objectUrl;
+          link.setAttribute("download", fname);
+          document.body.appendChild(link);
+          link.click();
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       showAllText(){
         this.isAllText = true
       },
       showShortText(){
         this.isAllText = false
       },
-      beforeUpload(file,promise){
+      beforeUpload(file){
         const upType = file.type === 'audio/mp3'
-        console.log(promise)
+        let upSize = file.size
+        if(upSize < 5100000){
+          this.isUpdataSize = true
+        }
         if(!upType){
-          this.$message.error('请选择性别')
-        }else{
-          this.isSuccse = true
+          this.$message.error('文件上传格式错误，只允许上传mp3格式')
+        }else if(!this.isUpdataSize){
+          console.log(this.isUpdataSize,'isUpdataSize')
+          this.$message.error('文件大小超过上限')
         }
       },
       handleChange(file){
         console.log(file)
+        if(file.file.status == 'done'){
+          this.reload()
+        }
+        //console.log(file.fileList[0].response.status)
+        //this.reload()
       },
-      hideModal(){},
-      toDemands(){},
-      toPlay(){},
-      downLoad(){},
-      toWell(){},
-      noWell(){},
-
+      toPlay(index){
+        if(this.currentIndex != index){
+          document.getElementsByClassName('to_play')[this.currentIndex].style.display = "block";
+          document.getElementsByClassName('to_pause')[this.currentIndex].style.display = "none";
+        }
+        this.currentIndex = index
+        const storyAudioUrl = this.deliveryList[index].voiceUrl
+        const storyAudioPlay = this.$refs.storyAudio
+        if (storyAudioUrl == this.$refs.storyAudio.src) {
+          if(storyAudioPlay.paused){
+            storyAudioPlay.play()
+            document.getElementsByClassName('to_play')[index].style.display = "none";
+            document.getElementsByClassName('to_pause')[index].style.display = "block";
+          }else{
+            storyAudioPlay.pause()
+            document.getElementsByClassName('to_play')[index].style.display = "block";
+            document.getElementsByClassName('to_pause')[index].style.display = "none";
+          }
+        } else {
+          this.$refs.storyAudio.src = storyAudioUrl;
+          storyAudioPlay.play()
+          document.getElementsByClassName('to_play')[index].style.display = "none";
+          document.getElementsByClassName('to_pause')[index].style.display = "block";
+        }
+      },
+      ended(){
+        document.getElementsByClassName('to_play')[this.currentIndex].style.display = "block";
+        document.getElementsByClassName('to_pause')[this.currentIndex].style.display = "none";
+      },
     },
 
     mounted(){
       axios.get('api/order/'+this.$route.params.id+'/detail').then(res => {
         this.orderMessage = res.data
         this.voiceStyle = this.orderMessage.voiceStyle.toString()
-        console.log(this.orderMessage)
-        var text = this.orderMessage.content
+        let text = this.orderMessage.content
         this.allText = text
         let textNum = text.length
-        if(textNum >= 100){
+        if(textNum > 150){
           this.text = text.substring(0,150) + '...'
         }else{
           this.text = text
@@ -202,6 +205,7 @@
       })
       axios.get('api/order/'+this.$route.params.id+'/delivery').then(res => {
         this.deliveryList = res.data
+        console.log(res.data)
       }).catch(err => {
         const errorStatus = err.response.status
         if(errorStatus == '401'){
@@ -221,11 +225,21 @@
   }
   .fast_detail{
     background: #ffffff;
+    min-height: 85vh;
     margin: 20px;
     border-radius: 4px;
     padding: 40px 20px;
     .title{
       margin-bottom: 40px;
+      position: relative;
+      .dowload{
+        position: absolute;
+        right: 0;
+        top: 5px;
+        display: flex;
+        align-items: center;
+        color: #666666;
+      }
       .title_title{
         width: 50px;
       }
@@ -272,8 +286,9 @@
       }
     }
     .demands_title{
-      font-size: 20px;
+      font-size: 18px;
       color: #222222;
+      margin-bottom: 20px;
       .color{
         background: #ffd101;
         margin-right: 10px;
@@ -294,10 +309,10 @@
             height: 60px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-around;
             margin-left: 15px;
             .mess_title{
-              margin-top: 10px;
+             // margin-top: 10px;
             }
             .time{
               font-size: 12px;
@@ -307,27 +322,19 @@
           }
         }
         .middle{
-          height: 28px;
           width: 100%;
           display: flex;
-          justify-content: space-between;
           padding-left: 65px;
-          .icons{
-            width: 45%;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            .play{
-              display: flex;
-              align-items: center;
+          .to_play{
+            margin-left: 10px;
+            &:hover{
+              cursor: pointer;
             }
-            .icon{
-              .icon_icon{
-                margin-right: 10px;
-              }
-              &:hover{
-                cursor: pointer;
-              }
+          }
+          .to_pause{
+            margin-left: 10px;
+            &:hover{
+              cursor: pointer;
             }
           }
         }
@@ -375,5 +382,29 @@
         }
       }
     }
+    .updata{
+      margin-top: 150px;
+      margin-bottom: 150px;
+      width: 100%;
+      text-align: center;
+      .updata_input{
+        &:hover{
+          cursor: pointer;
+        }
+        .updata_text{
+          color: #ffffff;
+          background: #ffd101;
+          border-radius: 4px;
+          width: 170px;
+          height: 40px;
+          text-align: center;
+          line-height: 40px;
+          box-shadow: 1px 2px 8px 2px rgba(255, 209, 1, 0.46);
+          margin-bottom: 20px;
+        }
+
+      }
+    }
+
   }
 </style>

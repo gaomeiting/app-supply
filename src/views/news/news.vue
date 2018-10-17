@@ -45,7 +45,6 @@
             </div>
        </div>
        
-       <!-- 123456 -->
    </div>
 </template>
 
@@ -94,7 +93,7 @@ export default {
                 }
             }).catch(err => {
                 this.loading = false;
-                handlerError(err.data)
+                handlerError(err.response.data)
             })
         }
     },

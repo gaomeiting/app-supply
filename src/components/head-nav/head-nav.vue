@@ -12,7 +12,7 @@
                     <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
                     <span>{{user.nickname}}</span>
                     </span>
-                    <a-menu style="width: 150px" slot="overlay">
+                    <a-menu style="width: 150px" slot="overlay" @click="loginOut">
                     <a-menu-item key="1">
                         <a-icon type="user" />
                         <span>个人中心</span>
@@ -22,11 +22,11 @@
                         <span>设置</span>
                     </a-menu-item>
                     <a-menu-divider />
-                    <a-menu-item key="3">
-                        <router-link to="">
+                    <a-menu-item key="3" >
+                        <!-- <router-link to=""> -->
                         <a-icon type="poweroff" />
                         <span>退出登录</span>
-                        </router-link>
+                        <!-- </router-link> -->
                     </a-menu-item>
                     </a-menu>
                 </a-dropdown>
@@ -41,6 +41,8 @@
 	
 </template>
 <script type="text/ecmascript-6">
+import { handlerError } from 'api/catch';
+import { mapMutations } from 'vuex';
 export default {
     data() {
         return {
@@ -65,6 +67,20 @@ export default {
             type: String,
             default: ''
         }
+    },
+    methods: {
+        loginOut({ item, key, keyPath }) {
+            if(key != 3) return;
+            this.$axios.post('/api/user/signout').then(res => {
+                this.setLoginOut()
+                this.$router.push('/login')
+            }).catch(err => {
+                handlerError(err.response.data)
+            })
+        },
+        ...mapMutations({
+            setLoginOut: 'SET_LOGOUT'
+        })
     }
 }
 </script>

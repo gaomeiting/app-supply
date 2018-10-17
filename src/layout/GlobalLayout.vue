@@ -19,8 +19,8 @@
           </a-badge>
           <a-dropdown class="header-navbar-item">
             <span>
-              <a-avatar class="avatar" size="small" shape="circle" :src="currentUser.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
-              <span>{{currentUser.nickname}}</span>
+              <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
+              <span>{{user.nickname}}</span>
             </span>
             <a-menu style="width: 150px" slot="overlay">
               <a-menu-item key="1">
@@ -55,7 +55,8 @@
   import IMenu from './siderMenu'
   import SidebarMenu from '@/components/sidebar/SidebarMenu.vue'
   import GlobalHeader from './GlobalHeader'
-  import { mapState } from 'vuex'
+  import { handlerError } from 'api/catch';
+  import { mapGetters } from 'vuex'
   import axios from "axios";
 export default {
   props: ['desc', 'logo', 'title', 'avatar'],
@@ -69,16 +70,13 @@ export default {
       collapsed: false
     }
   },
+  created() {
+  },
   methods: {
-
+    
   },
   computed: {
-    currentUser () {
-      return {
-        'nickname': '系统管理员',
-        'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
-      }
-    }
+     ...mapGetters(['user'])
   }
 }
 </script>

@@ -1,10 +1,10 @@
 <template>
   <div class="fast_detail">
+    <a @click="downLoad(orderMessage.id)" >123</a>
     <div class="title">
       <span class="title_title">标题：</span>
       <span class="title_name">{{orderMessage.title}}</span>
-      <a @click="downLoad(orderMessage.id)" >123</a>
-      <a :href="'/api/order/export/'+ orderMessage.id" class="dowload">
+      <a :href="'/api/order/export/173120234314399744'" class="dowload">
         <img src="@/assets/export.png" alt="">
         导出文稿与要求
       </a>
@@ -106,20 +106,11 @@
     },
     methods:{
       downLoad(id){
+
         //window.location.href='/api/order/export/'+ id
-        axios.get('api/order/export/'+id).then(res => {
-          let blob = new Blob([res.data], {
-            type: `application/msword` //word文档为msword,pdf文档为pdf
-          });
-          console.log(blob)
-          let objectUrl = URL.createObjectURL(blob);
-          console.log(objectUrl)
-          let link = document.createElement("a");
-          let fname = `我的文档`; //下载文件的名字
-          link.href = objectUrl;
-          link.setAttribute("download", fname);
-          document.body.appendChild(link);
-          link.click();
+        axios.get('api/order/export/'+id , {responseType: 'arraybuffer'}).then(res => {
+          console.log(res.data)
+          excelDown()
         }).catch(err => {
           console.log(err)
         })
@@ -217,6 +208,27 @@
       })
     }
   }
+  function excelDown(res){  // excel 下载请求
+    //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet这里表示xlsx类型
+    var blob = new Blob([res.data], {type: 'application/vnd.ms-word'});
+    var downloadElement = document.createElement('a');
+    var href = window.URL.createObjectURL(blob); //创建下载的链接
+    downloadElement.href = res.request.responseURL +`&token=${sessionStorage.JRYC_TOKEN}`;
+    downloadElement.download = '列表'; //下载后文件名
+    document.body.appendChild(downloadElement);
+    downloadElement.click(); //点击下载
+    document.body.removeChild(downloadElement); //下载完成移除元素
+    window.URL.revokeObjectURL(href); //释放掉blob对象
+  }
+  axios.interceptors.response.use(res => {
+
+    if (res.headers['content-type'] == 'application/vnd.ms-word' || res.headers['content-type'] == 'application/vnd.ms-word') {
+      excelDown(res)
+      return {code:0,state:'success'}
+    }else{
+      return res
+    }
+  })
 </script>
 
 <style lang="scss" scoped>

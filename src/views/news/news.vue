@@ -53,6 +53,7 @@
 import SideBar from 'components/sidebar/SidebarMenu';
 import HeadNav from 'components/head-nav/head-nav';
 import NoResult from 'components/no-result/no-result';
+import { mapGetters } from 'vuex';
 import { handlerError } from 'api/catch';
 
 export default {
@@ -71,6 +72,11 @@ export default {
     },
     created() {
         this._getNews()
+        this.currentUser = { ...this.user }
+        console.log(this.currentUser)
+    },
+    computed: {
+        ...mapGetters(['user'])
     },
     methods: {
         onChange(current) {
@@ -85,7 +91,6 @@ export default {
                 if(res.data.status == 200) {
                     if(!this.total) this.total = res.data.total;
                     this.list = res.data.data;
-                    console.log(this.list)
                 }
             }).catch(err => {
                 this.loading = false;

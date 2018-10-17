@@ -1,10 +1,14 @@
+
 import router from "../router/router"
 import store from "../store"
-console.log(router)
+import {
+    message
+} from 'ant-design-vue';
 
 export function handlerError(err) {
+    console.log(err)
     if (err) {
-        if(err.status === 401) {
+        if(err.status == 401) {
             store.commit('SET_LOGOUT');
             router.replace({
                 path: '/login',
@@ -13,11 +17,11 @@ export function handlerError(err) {
             return;
         }
         if (err.message) {
-            this.$message.warning(err.message);
+            message.warning(err.message);
         } else {
-            this.$message.warning(err.error);
+            message.warning(err.error);
         }
     } else {
-        this.$message.warning('接口调试中');
+        message.warning('接口调试中');
     }
 }

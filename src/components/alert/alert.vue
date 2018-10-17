@@ -4,7 +4,7 @@
 	<div class="confirm-wrapper">
 		<div class="confirm-content">
 			<slot></slot>
-			<p class="text">请使用微信扫描二维码登录</p>
+			<!-- <p class="text">请使用微信扫描二维码登录</p> -->
 			<div class="operate-btn">
 					<i class="iconfont icon-shanchu"></i>
 			</div>

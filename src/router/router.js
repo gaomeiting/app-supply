@@ -53,7 +53,7 @@ const routes = [
               component: () => import("@/views/order/fast.vue")
             },
             {
-              path: '/order/fastDetail/:id',
+              path: '/order/fastDetail',
               name: 'order_fast_detail',
               meta: {breadcrumbName: '快捷订单详情', requireAuth: true},
               component: () => import("@/views/order/fastDetail.vue")
@@ -152,8 +152,8 @@ const routes = [
 ]
 
 if (window.localStorage.getItem('user')) {
-    
-  store.commit('SET_LOGIN', window.localStorage.getItem('user'))
+    let user = JSON.parse(window.localStorage.getItem('user'))
+  store.commit('SET_LOGIN', user)
 }
 const router= new Router({
 routes : routes
@@ -168,10 +168,10 @@ router.beforeEach((to, from, next) => {
       else {
         axios('/api/user/userinfo').then(res => {
           //window.alert(res.uid)
-          store.commit('SET_LOGIN', res);
+          store.commit('SET_LOGIN', res.data);
           next();
         }).catch(err => {
-          handlerError(err.data)
+          handlerError(err.response.data)
         })
       }
   }

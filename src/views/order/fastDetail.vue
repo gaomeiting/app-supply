@@ -1,10 +1,9 @@
 <template>
   <div class="fast_detail">
-    <a @click="downLoad(orderMessage.id)" >123</a>
     <div class="title">
       <span class="title_title">标题：</span>
       <span class="title_name">{{orderMessage.title}}</span>
-      <a :href="'/api/order/export/173120234314399744'" class="dowload">
+      <a :href="'http://192.168.100.37:8083/api/order/export/'+orderMessage.id" class="dowload">
         <img src="@/assets/export.png" alt="">
         导出文稿与要求
       </a>
@@ -91,6 +90,8 @@
     data(){
       return{
         currentUrl:'',
+        domain:'',
+        port:'',
         currentIndex:0,
         orderMessage:{},
         deliveryList:[],
@@ -174,6 +175,10 @@
     },
 
     mounted(){
+      var api = document.domain
+      this.domain = api
+      this.port = location.port
+      console.log(api,this.port)
       axios.get('api/order/'+this.$route.params.id+'/detail').then(res => {
         this.orderMessage = res.data
         this.voiceStyle = this.orderMessage.voiceStyle.toString()
@@ -221,7 +226,6 @@
     window.URL.revokeObjectURL(href); //释放掉blob对象
   }
   axios.interceptors.response.use(res => {
-
     if (res.headers['content-type'] == 'application/vnd.ms-word' || res.headers['content-type'] == 'application/vnd.ms-word') {
       excelDown(res)
       return {code:0,state:'success'}

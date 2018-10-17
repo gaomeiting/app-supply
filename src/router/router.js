@@ -53,7 +53,7 @@ const routes = [
               component: () => import("@/views/order/fast.vue")
             },
             {
-              path: '/order/fastDetail',
+              path: '/order/:id',
               name: 'order_fast_detail',
               meta: {breadcrumbName: '快捷订单详情', requireAuth: true},
               component: () => import("@/views/order/fastDetail.vue")
@@ -160,7 +160,7 @@ routes : routes
 })
 
 router.beforeEach((to, from, next) => {
-  
+
   if (to.matched.some(r => r.meta.requireAuth)) {
       if (store.state.user) {
           next();

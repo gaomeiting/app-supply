@@ -85,7 +85,7 @@ export default {
         _getNews() {
             let page = this.current - 1;
             this.loading = true;
-            this.$axios(`/api/notification?page=${page}&size=${this.size}&sort=creatTime`).then(res => {
+            this.$axios(`/api/notification?page=${page}&size=${this.size}&sort=creatTime,desc`).then(res => {
                 this.loading = false
                 if(res.data.status == 200) {
                     if(!this.total) this.total = res.data.total;

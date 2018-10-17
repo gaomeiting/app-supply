@@ -15,7 +15,7 @@
           <router-link to="/order/fast">快捷订单</router-link>
         </a-menu-item>
         <a-menu-item key="order_project">
-          <router-link to="/order/project">项目订单</router-link>
+          <router-link :to="{ name: 'order_project'}">项目订单</router-link>
         </a-menu-item>
       </a-sub-menu>
       <a-sub-menu key="demands">

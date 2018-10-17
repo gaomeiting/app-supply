@@ -106,16 +106,6 @@
       }
     },
     methods:{
-      downLoad(id){
-
-        //window.location.href='/api/order/export/'+ id
-        axios.get('api/order/export/'+id , {responseType: 'arraybuffer'}).then(res => {
-          console.log(res.data)
-          excelDown()
-        }).catch(err => {
-          console.log(err)
-        })
-      },
       showAllText(){
         this.isAllText = true
       },
@@ -175,10 +165,6 @@
     },
 
     mounted(){
-      var api = document.domain
-      this.domain = api
-      this.port = location.port
-      console.log(api,this.port)
       axios.get('api/order/'+this.$route.params.id+'/detail').then(res => {
         this.orderMessage = res.data
         this.voiceStyle = this.orderMessage.voiceStyle.toString()

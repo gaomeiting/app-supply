@@ -14,9 +14,12 @@
         <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed" />
         <span style="color: #000;font-size: 16px">{{this.$route.meta.breadcrumbName}}</span>
         <div class="header-navbar">
-          <a-badge count="5" class="header-navbar-item-icon" >
-            <a-icon type="bell" />
-          </a-badge>
+          <a @click="toMesList">
+            <a-badge :count="messageTotal" class="header-navbar-item-icon"  >
+              <a-icon type="bell"/>
+            </a-badge>
+          </a>
+
           <a-dropdown class="header-navbar-item">
             <span>
               <a-avatar class="avatar" size="small" shape="circle" :src="user.avatar" style="vertical-align: middle; margin-right: 0.5em;" />
@@ -33,10 +36,10 @@
               </a-menu-item>
               <a-menu-divider />
               <a-menu-item key="3">
-                <router-link to="/login">
+                <a @click="outLogin">
                   <a-icon type="poweroff" />
                   <span>退出登录</span>
-                </router-link>
+                </a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -67,17 +70,44 @@ export default {
   },
   data () {
     return {
-      collapsed: false
+      collapsed: false,
+      messageTotal:null,
     }
   },
   created() {
   },
   methods: {
-    
+    toMesList(){
+      console.log(123)
+      this.$router.push({
+        name: 'news',
+      })
+    },
+    outLogin(){
+      axios.post('api/user/signout').then(res => {
+        this.$router.replace('/login')
+      }).catch(err => {
+        console.log(err,'demand')
+      })
+    },
   },
   computed: {
      ...mapGetters(['user'])
-  }
+  },
+  mounted(){
+    axios.get('api/notification/count').then(res => {
+      this.messageTotal = res.data
+    }).catch(err => {
+      const errorStatus = err.response.status
+      if(errorStatus == '401'){
+        this.$router.replace('/login')
+
+      }
+      if(errorStatus == '500'){
+        this.error = 1
+      }
+    })
+  },
 }
 </script>
 

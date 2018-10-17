@@ -4,7 +4,7 @@
         <div class="content">
             <h1>{{config[type].title}}</h1>
             <div class="desc">{{config[type].desc}}</div>
-            <div class="action"><a-button type="primary" >返回首页</a-button></div>
+            <div class="action"><a-button type="primary" @click="toHome">返回首页</a-button></div>
         </div>
     </div>
 </template>
@@ -18,7 +18,14 @@ export default {
     components: {AButton},
     data() {
         return {config: Config}
+    },
+  methods:{
+    toHome(){
+      this.$router.push({
+        name: 'dashboard',
+      })
     }
+  }
 }
 </script>
 

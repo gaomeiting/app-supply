@@ -36,7 +36,7 @@
                         </ul>
                     </div>
                     <div class="pagination-wrap" v-if="list.length>0">
-                        <a-pagination size="small" :total="total" :current="current" :defaultPageSize="6" showQuickJumper :showTotal="total => `总共 ${total} 条`" @change="onChange" />
+                        <a-pagination size="small" :total="total" :current="current" :defaultPageSize="size" showQuickJumper :showTotal="total => `总共 ${total} 条`" @change="onChange" />
                     </div>
                     <div class="no-result-wrap" v-if="list.length == 0 && !loading">
                         <no-result title="空空如也~~"></no-result>

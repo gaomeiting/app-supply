@@ -4,7 +4,7 @@
            <div class="logo-wrap">
                <img src="/logo.png" alt="">
            </div>
-            <head-nav :user="currentUser"></head-nav>
+            <head-nav :user="currentUser" :hideUser='hideUser'></head-nav>
        </div>
        <div class="content">
            <figure>
@@ -33,7 +33,8 @@ export default {
             currentUser: {
                 'nickname': '系统管理员默认',
                 'avatar': 'http://st.ddpei.cn/hv/avatar/2wJfH4mR6TCFKyd5DwsWXK.jpg?x-oss-process=style/avatar120png'
-            }
+            },
+            hideUser: true
 		}
 	},
 	created() {

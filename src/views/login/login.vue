@@ -27,6 +27,7 @@ import HeadBar from 'components/head-bar/head-bar';
 import FootBar from 'components/footbar/footbar';
 import { handlerError } from 'api/catch';
 import AlertBox from 'components/alert/alert';
+import { mapGetters, mapMutations } from 'vuex';
 export default {
 	data() {
 		return {
@@ -47,6 +48,9 @@ export default {
 		}
 	},
 	created() {
+		if(this.user) {
+			this.setLogOut();
+		}
 		let state = this.$route.query.redirect || '/';
 		this.$nextTick(() => {
 			let obj = new WxLogin ({
@@ -61,11 +65,16 @@ export default {
 		})
 		
 	},
+	computed: {
+		...mapGetters([user])
+	},
 	methods: {
 		showAlertBox() {
 			this.$refs.alertBox.show()
 		},
-		
+		...mapMutations({
+			'setLogOut' : 'SET_LOGOUT'
+		})
 	},
 	components: {
 		FootBar,

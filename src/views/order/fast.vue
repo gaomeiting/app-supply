@@ -10,7 +10,7 @@
         class="details_id"
         slot="id"
         @click="toFastDetail(record.id)"
-        slot-scope="id, record" >{{id}}</span>
+        slot-scope="id, record" >{{record.title}}</span>
         <!--预计收益-->
         <div slot="incomeFrom"
              slot-scope="incomeFrom, record" >{{record.incomeFrom}}~{{record.incomeTo}}元</div>
@@ -24,7 +24,10 @@
         </div>
         <!--结算收益-->
         <div slot="income"
-             slot-scope="income, record" >{{income}}元</div>
+             slot-scope="income, record" >
+          <span v-if="income == 0"> </span>
+          <span v-if="income != 0">{{income}}元</span>
+        </div>
         <div slot="click"
              slot-scope="text, record">
           <p class="details_no" v-if="record.voiceStatus == 1">上传音频</p>
@@ -54,7 +57,7 @@
   import Exception from '../exception/500'
   import {handlerError} from 'api/catch'
   const columns = [
-    { title: '订单', dataIndex: 'id', key: 'id', scopedSlots: { customRender: 'id' } },
+    { title: '订单', dataIndex: 'id', key: 'id', scopedSlots: { customRender: 'id' },width:'20%' },
     { title: '预计收益', dataIndex: 'incomeFrom', key: 'incomeFrom', scopedSlots: { customRender: 'incomeFrom' }},
     { title: '结算收益', dataIndex: 'income', key: 'income', scopedSlots: { customRender: 'income' }},
     { title: '状态', dataIndex: 'status', key: 'status' , scopedSlots: { customRender: 'status' }},
@@ -106,6 +109,7 @@
         }
       },
       toFastDetail(id){
+        console.log(id)
         axios.get('api/order/'+id+'/detail').then(res => {
           this.$router.push({
             name: 'order_fast_detail',

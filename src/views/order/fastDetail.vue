@@ -32,7 +32,7 @@
       </span>
     </div>
     <p class="demands_title"><span class="color">&nbsp;</span>交付记录</p>
-    <div class="demands_list" v-if="orderMessage.voiceStatus == 1">
+    <div class="demands_list" v-if="deliveryList.length >= 1">
       <a-list itemLayout="horizontal"
               :dataSource="deliveryList">
         <a-list-item slot="renderItem" slot-scope="item, index">
@@ -68,7 +68,7 @@
         </a-list-item>
       </a-list>
     </div>
-    <div class="updata" v-if="orderMessage.voiceStatus == 0">
+    <div class="updata" v-if="orderMessage.voiceStatus == 0 && deliveryList.length == 0">
       <a-upload name="file"
                 class="updata_input"
                 :beforeUpload="beforeUpload"

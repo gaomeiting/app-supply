@@ -60,6 +60,7 @@
   import GlobalHeader from './GlobalHeader'
   import { handlerError } from 'api/catch';
   import { mapGetters } from 'vuex'
+  import { mapMutations } from 'vuex';
   import axios from "axios";
 export default {
   props: ['desc', 'logo', 'title', 'avatar'],
@@ -78,18 +79,21 @@ export default {
   },
   methods: {
     toMesList(){
-      console.log(123)
       this.$router.push({
         name: 'news',
       })
     },
     outLogin(){
       axios.post('api/user/signout').then(res => {
+        this.setLoginOut()
         this.$router.replace('/login')
       }).catch(err => {
-        console.log(err,'demand')
+        handlerError(err.response.data)
       })
     },
+    ...mapMutations({
+      setLoginOut: 'SET_LOGOUT'
+    })
   },
   computed: {
      ...mapGetters(['user'])

@@ -3,7 +3,7 @@
     <div class="title">
       <span class="title_title">标题：</span>
       <span class="title_name">{{orderMessage.title}}</span>
-      <a :href="'http://192.168.100.37:8083/api/order/export/'+orderMessage.id" class="dowload">
+      <a :href="'/api/order/export/'+orderMessage.id" class="dowload">
         <img src="@/assets/export.png" alt="">
         导出文稿与要求
       </a>
@@ -115,7 +115,7 @@
       beforeUpload(file){
         const upType = file.type === 'audio/mp3'
         let upSize = file.size
-        if(upSize < 5100000){
+        if(upSize < 20100000){
           this.isUpdataSize = true
         }
         if(!upType){
@@ -126,8 +126,8 @@
         }
       },
       handleChange(file){
-        console.log(file)
         if(file.file.status == 'done'){
+          this.$message.success('音频上传成功')
           this.reload()
         }
         //console.log(file.fileList[0].response.status)

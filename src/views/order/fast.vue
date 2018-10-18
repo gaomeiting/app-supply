@@ -88,7 +88,7 @@
         console.log(file)
         const upType = file.type === 'audio/mp3'
         let upSize = file.size
-        if(upSize < 5100000){
+        if(upSize < 20100000){
           this.isUpdataSize = true
         }
         if(!upType){
@@ -101,6 +101,7 @@
       handleChange(file){
         console.log(file)
         if(file.file.status == 'done'){
+          this.$message.success('音频上传成功')
           this.reload()
         }
       },

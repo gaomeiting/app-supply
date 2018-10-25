@@ -99,7 +99,7 @@ export default {
      ...mapGetters(['user'])
   },
   mounted(){
-    axios.get('api/notification/count').then(res => {
+    axios.get('/api/notification/count').then(res => {
       this.messageTotal = res.data
     }).catch(err => {
       const errorStatus = err.response.status

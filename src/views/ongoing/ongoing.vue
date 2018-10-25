@@ -2,19 +2,19 @@
 	<div class="page" id="ongoing" ref="ongoing">
         <div class="head-wrap">
            <div class="logo-wrap">
-               <img src="/logo.png" alt="">
+               <img src="/dubber/logo.png" alt="">
            </div>
             <head-nav :user="currentUser" :hideUser='hideUser'></head-nav>
        </div>
        <div class="content">
            <figure>
-               <img src="/bg.png">
+               <img src="/dubber/bg.png">
            </figure>
            <h3>你的资料正在审核中</h3>
            <p>我们会尽快完成审核并反馈结果，请耐心等待 <br> 关注 
            <a-tooltip placement="top" :getPopupContainer="getPopupContainer" overlayClassName="lay" >
                 <template slot="title">
-                 <img src="/code.jpg" class="code">
+                 <img src="/dubber/code.jpg" class="code">
                 </template>
                 <span>叮当配音</span>
             </a-tooltip>

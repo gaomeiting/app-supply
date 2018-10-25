@@ -2,7 +2,7 @@
    <div class="page">
        <div class="head-wrap">
            <div class="logo">
-               <img src="/logo.png" alt="">
+               <img src="/dubber/logo.png" alt="">
            </div>
             <head-nav :user="currentUser" title="消息中心"></head-nav>
        </div>
@@ -19,7 +19,7 @@
                         <ul>
                             <li v-for="(item, index) in list" :key="index">
                                 <figure>
-                                    <img src="/header.png" >
+                                    <img src="/dubber/header.png" >
                                 </figure>
                                 <div class="info-wrap">
                                     <h3>叮当配官方</h3>

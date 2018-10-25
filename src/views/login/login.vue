@@ -10,7 +10,7 @@
 				<a href="javascript:;" class="btn" @click="showAlertBox">配音员入驻</a>
 			</div>
 			<figure>
-				<img src="/singer.jpg" alt="配音员入驻">
+				<img src="/dubber/singer.jpg" alt="配音员入驻">
 			</figure>
 		</div>
 		<alert-box ref="alertBox">
@@ -33,15 +33,15 @@ export default {
 		return {
 			list : [
 				{
-					image: '/footer_icon_1.png',
+					image: '/dubber/footer_icon_1.png',
 					text: '让你的声音被更多的人听见 <br> 已有超过2000家客户选择了叮当配'
 				},
 				{
-					image: '/footer_icon_2.png',
+					image: '/dubber/footer_icon_2.png',
 					text: '严格的声音质量把关，配音晋升体系 <br> 专业的声音经济，让你的声音价值最大化'
 				},
 				{
-					image: '/footer_icon_3.png',
+					image: '/dubber/footer_icon_3.png',
 					text: '项目准时借款率100% <br> 你不敢想的，我们真的做到了'
 				}
 			]

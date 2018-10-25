@@ -68,13 +68,13 @@
         </a-list-item>
       </a-list>
     </div>
-    <div class="updata" v-if="orderMessage.voiceStatus == 0 && deliveryList.length == 0">
+    <div class="updata" v-if="orderMessage.voiceStatus == 0">
       <a-upload name="file"
                 class="updata_input"
                 :beforeUpload="beforeUpload"
                 :showUploadList="isSuccse"
                 @change="handleChange"
-                :action="'api/order/'+ orderMessage.id +'/upload'">
+                :action="'/api/order/'+ orderMessage.id +'/upload'">
         <p class="updata_text">上传音频</p>
       </a-upload>
       <p>(格式限制为mp3格式，大小不超过20M)</p>
@@ -165,6 +165,7 @@
     mounted(){
       axios.get('/api/order/'+this.$route.params.id+'/detail').then(res => {
         this.orderMessage = res.data
+        console.log(res.data)
         this.voiceStyle = this.orderMessage.voiceStyle.toString()
         let text = this.orderMessage.content
         this.allText = text
@@ -178,16 +179,23 @@
         const errorStatus = err.response.status
         if(errorStatus == '500'){
           this.error = 1
+        }else if(errorStatus == '401'){
+          this.$router.replace('/login')
+          localStorage.removeItem('user');
         }else{
           handlerError(err.response.data)
         }
       })
       axios.get('/api/order/'+this.$route.params.id+'/delivery').then(res => {
         this.deliveryList = res.data
+        console.log(res.data)
       }).catch(err => {
         const errorStatus = err.response.status
         if(errorStatus == '500'){
           this.error = 1
+        }else if(errorStatus == '401'){
+          this.$router.replace('/login')
+          localStorage.removeItem('user');
         }else{
           handlerError(err.response.data)
         }

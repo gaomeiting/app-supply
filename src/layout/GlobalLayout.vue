@@ -103,12 +103,13 @@ export default {
       this.messageTotal = res.data
     }).catch(err => {
       const errorStatus = err.response.status
-      if(errorStatus == '401'){
-        this.$router.replace('/login')
-
-      }
       if(errorStatus == '500'){
         this.error = 1
+      }else if(errorStatus == '401'){
+        this.$router.replace('/login')
+        localStorage.removeItem('user');
+      }else{
+        handlerError(err.response.data)
       }
     })
   },

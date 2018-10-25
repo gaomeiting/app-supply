@@ -1,0 +1,1 @@
+export const API_URL = 'http://http://mp.ddpei.cn'

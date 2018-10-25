@@ -72,7 +72,7 @@ export default {
       }
   },
   mounted(){
-    axios.get('api/user/workPlatformInfo').then(res => {
+    axios.get('/api/user/workPlatformInfo').then(res => {
       this.dashboardMes = res.data
       console.log( this.dashboardMes)
     }).catch(err => {

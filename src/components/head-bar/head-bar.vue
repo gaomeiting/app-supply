@@ -1,6 +1,6 @@
 <template>
 	<div class="head-wrap">
-        <figure><img src="/logo.png"></figure>
+        <figure><img src="/dubber/logo.png"></figure>
     </div>
 	
 </template>

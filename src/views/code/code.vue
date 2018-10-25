@@ -2,13 +2,13 @@
 	<div class="page" id="ongoing" ref="ongoing">
         <div class="head-wrap">
            <div class="logo-wrap">
-               <img src="/logo.png" alt="">
+               <img src="/dubber/logo.png" alt="">
            </div>
             <head-nav :user="currentUser" :hideUser='hideUser'></head-nav>
        </div>
        <div class="content">
            <figure>
-               <img src="/code.jpg">
+               <img src="/dubber/code.jpg">
            </figure>
            <h3>关注公众号,去认证配音员</h3>
            

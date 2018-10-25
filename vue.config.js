@@ -2,7 +2,7 @@ const path = require('path')
 const resolve = dir => {return path.join(__dirname, dir)}
 
 module.exports = {
-  baseUrl: './',
+  baseUrl: '/dubber',
   chainWebpack: config => {
     config.resolve.alias
       .set('@', resolve('src'))
@@ -14,6 +14,6 @@ module.exports = {
   },
   productionSourceMap: false,
   devServer: {
-    //proxy: 'http://192.168.100.37:8083'
+    proxy: 'http://192.168.100.37:8083'
   },
 }

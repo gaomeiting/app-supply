@@ -88,7 +88,6 @@
 
       },
       beforeUpload(file){
-        console.log(file)
         const upType = file.type === 'audio/mp3'
         let upSize = file.size
         if(upSize < 20100000){
@@ -97,19 +96,16 @@
         if(!upType){
           this.$message.error('文件上传格式错误，只允许上传mp3格式')
         }else if(!this.isUpdataSize){
-          console.log(this.isUpdataSize,'isUpdataSize')
           this.$message.error('文件大小超过上限')
         }
       },
       handleChange(file){
-        console.log(file)
         if(file.file.status == 'done'){
           this.$message.success('音频上传成功')
           this.reload()
         }
       },
       toFastDetail(id){
-        console.log(id)
         axios.get('api/order/'+id+'/detail').then(res => {
           this.$router.push({
             name: 'order_fast_detail',
@@ -119,18 +115,17 @@
           })
         }).catch(err => {
           const errorStatus = err.response.status
-          if(errorStatus == '401'){
-            this.$router.replace('/login')
-          }
           if(errorStatus == '500'){
             this.error = 1
+          }else{
+            handlerError(err.response.data)
           }
         })
 
       },
     },
     mounted(){
-      axios.get('api/order?status').then(res => {
+      axios.get('/api/order?status').then(res => {
         this.orderList = res.data.data
       }).catch(err => {
         const errorStatus = err.response.status

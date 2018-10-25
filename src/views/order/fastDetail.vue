@@ -121,7 +121,6 @@
         if(!upType){
           this.$message.error('文件上传格式错误，只允许上传mp3格式')
         }else if(!this.isUpdataSize){
-          console.log(this.isUpdataSize,'isUpdataSize')
           this.$message.error('文件大小超过上限')
         }
       },
@@ -130,7 +129,6 @@
           this.$message.success('音频上传成功')
           this.reload()
         }
-        //console.log(file.fileList[0].response.status)
         //this.reload()
       },
       toPlay(index){
@@ -165,7 +163,7 @@
     },
 
     mounted(){
-      axios.get('api/order/'+this.$route.params.id+'/detail').then(res => {
+      axios.get('/api/order/'+this.$route.params.id+'/detail').then(res => {
         this.orderMessage = res.data
         this.voiceStyle = this.orderMessage.voiceStyle.toString()
         let text = this.orderMessage.content
@@ -178,23 +176,20 @@
         }
       }).catch(err => {
         const errorStatus = err.response.status
-        if(errorStatus == '401'){
-          this.$router.replace('/login')
-        }
         if(errorStatus == '500'){
           this.error = 1
+        }else{
+          handlerError(err.response.data)
         }
       })
-      axios.get('api/order/'+this.$route.params.id+'/delivery').then(res => {
+      axios.get('/api/order/'+this.$route.params.id+'/delivery').then(res => {
         this.deliveryList = res.data
-        console.log(res.data)
       }).catch(err => {
         const errorStatus = err.response.status
-        if(errorStatus == '401'){
-          this.$router.replace('/login')
-        }
         if(errorStatus == '500'){
           this.error = 1
+        }else{
+          handlerError(err.response.data)
         }
       })
     }

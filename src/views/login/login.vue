@@ -28,6 +28,7 @@ import FootBar from 'components/footbar/footbar';
 import { handlerError } from 'api/catch';
 import AlertBox from 'components/alert/alert';
 import { mapGetters, mapMutations } from 'vuex';
+import { BASE_URL } from 'api/config';
 export default {
 	data() {
 		return {
@@ -57,10 +58,10 @@ export default {
 				id:"login_container",
 				appid: "wx488c5ae325198186",
 				scope: "snsapi_login",
-				redirect_uri: encodeURI("http://mp.ddpei.cn/api/user/wechat/auth") ,
+				redirect_uri: encodeURI(`${BASE_URL}/api/user/wechat/auth`) ,
 				state,
 				style: "black",      
-				href: "http://mp.ddpei.cn/code.css"
+				href: ""
 			});
 		})
 		

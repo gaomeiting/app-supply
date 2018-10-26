@@ -8,6 +8,10 @@ const mutations = {
     [types.SET_LOGOUT](state) {
         localStorage.removeItem('user');
         state.user = null
+    },
+    [types.SET_STATUS](state, num) {
+        localStorage.status = JSON.stringify({status: num});
+        state.status = num;
     }
 }
 export default mutations

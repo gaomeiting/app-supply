@@ -11,22 +11,20 @@
         slot="id"
         @click="toFastDetail(record.id)"
         slot-scope="id, record" >{{record.title}}</span>
-        <!--预计收益-->
-        <div slot="incomeFrom"
-             slot-scope="incomeFrom, record" >{{record.incomeFrom}}~{{record.incomeTo}}元</div>
         <!--状态-->
         <div slot="status"
              slot-scope="status, record" >
           <span v-if="record.status == 0 ">未开始</span>
           <span v-if="record.status == 1 ">进行中</span>
-          <span v-if="record.status == 9 ">已结束</span>
+          <span v-if="record.status == 9 ">已完成</span>
           <span v-if="record.status == 8 ">已取消</span>
+          <span v-if="record.status == 2 ">修改中</span>
         </div>
         <!--结算收益-->
-        <div slot="income"
-             slot-scope="income, record" >
-          <span v-if="income == 0"> </span>
-          <span v-if="income != 0">{{income}}元</span>
+        <div slot="cost"
+             slot-scope="cost, record" >
+          <span v-if="cost == 0"> </span>
+          <span v-if="cost != 0">{{cost}}元</span>
         </div>
         <div slot="click"
              slot-scope="text, record">
@@ -41,7 +39,6 @@
             <p class="updata_text">上传音频</p>
           </a-upload>
         </div>
-
         <!--<span
           class="details_click"
           slot="click"
@@ -58,9 +55,8 @@
   import {handlerError} from 'api/catch'
   const columns = [
     { title: '订单', dataIndex: 'id', key: 'id', scopedSlots: { customRender: 'id' },width:'20%' },
-    { title: '预计收益', dataIndex: 'incomeFrom', key: 'incomeFrom', scopedSlots: { customRender: 'incomeFrom' }},
-    { title: '结算收益', dataIndex: 'income', key: 'income', scopedSlots: { customRender: 'income' }},
-    { title: '状态', dataIndex: 'status', key: 'status' , scopedSlots: { customRender: 'status' }},
+    { title: '订单金额', dataIndex: 'cost', key: 'cost', scopedSlots: { customRender: 'cost' }},
+    { title: '配音状态', dataIndex: 'status', key: 'status' , scopedSlots: { customRender: 'status' }},
     { title: '交付时间', dataIndex: 'deliveryTime', key: 'deliveryTime'},
     { title: '操作' , key: 'click' , scopedSlots: { customRender: 'click' }}
   ];
@@ -88,7 +84,6 @@
 
       },
       beforeUpload(file){
-        console.log(file)
         const upType = file.type === 'audio/mp3'
         let upSize = file.size
         if(upSize < 20100000){
@@ -97,20 +92,17 @@
         if(!upType){
           this.$message.error('文件上传格式错误，只允许上传mp3格式')
         }else if(!this.isUpdataSize){
-          console.log(this.isUpdataSize,'isUpdataSize')
           this.$message.error('文件大小超过上限')
         }
       },
       handleChange(file){
-        console.log(file)
         if(file.file.status == 'done'){
           this.$message.success('音频上传成功')
           this.reload()
         }
       },
       toFastDetail(id){
-        console.log(id)
-        axios.get('api/order/'+id+'/detail').then(res => {
+        axios.get('/api/order/'+id+'/detail').then(res => {
           this.$router.push({
             name: 'order_fast_detail',
             params: {
@@ -119,30 +111,33 @@
           })
         }).catch(err => {
           const errorStatus = err.response.status
-          if(errorStatus == '401'){
-            this.$router.replace('/login')
-          }
           if(errorStatus == '500'){
             this.error = 1
+          }else if(errorStatus == '401'){
+            this.$router.replace('/login')
+            localStorage.removeItem('user');
+          }else{
+            handlerError(err.response.data)
           }
         })
-
       },
     },
     mounted(){
-      axios.get('api/order?status').then(res => {
+      axios.get('/api/order?status').then(res => {
         this.orderList = res.data.data
       }).catch(err => {
         const errorStatus = err.response.status
         if(errorStatus == '500'){
           this.error = 1
+        }else if(errorStatus == '401'){
+          this.$router.replace('/login')
+          localStorage.removeItem('user');
         }else{
           handlerError(err.response.data)
         }
       })
     },
   }
-
 </script>
 <style lang="scss" scoped>
   .fast{

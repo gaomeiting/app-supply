@@ -74,11 +74,13 @@ export default {
   mounted(){
     axios.get('/api/user/workPlatformInfo').then(res => {
       this.dashboardMes = res.data
-      console.log( this.dashboardMes)
     }).catch(err => {
       const errorStatus = err.response.status
       if(errorStatus == '500'){
         this.error = 1
+      }else if(errorStatus == '401'){
+        this.$router.replace('/login')
+        localStorage.removeItem('user');
       }else{
         handlerError(err.response.data)
       }
